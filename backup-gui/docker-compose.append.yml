@@ -1,0 +1,22 @@
+  backup-gui:
+    build: ./backup-gui
+    container_name: wp_backup_gui
+    restart: unless-stopped
+    environment:
+      - MODE=docker-exec
+      - WP_CONTAINER=wp_backup
+      - SCRIPTS_DIR=/usr/local/bin
+      - BACKUPS_DIR=/backups
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backups:/backups:rw
+      - ./backup:/backup:ro
+      - wp_data:/var/www/html
+    ports:
+      - "8088:8080"
+    depends_on:
+      - backup
